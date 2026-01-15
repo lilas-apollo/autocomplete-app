@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Autocomplete } from "./components/Autocomplete";
+import { fetchItems, type Item } from "./api/mockApi";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "linear-gradient(135deg, #f9f5ff, #fff)",
+        width: "100%",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 500,
+          width: "100%",
+          background: "#fff",
+          borderRadius: 16,
+          padding: "30px 20px",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+          transition: "0.3s",
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.15)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.1)")
+        }
+      >
+        <h1 style={{ marginBottom: 10, color: "#7b4eff", textAlign: "center" }}>
+          Search for Items
+        </h1>
+        <p style={{ marginBottom: 20, textAlign: "center", color: "#555" }}>
+          Start typing to see suggestions. Use arrow keys to navigate and enter
+          to select.
         </p>
+
+        <div style={{ width: "100%" }}>
+          <Autocomplete<Item>
+            fetcher={fetchItems}
+            getLabel={(item) => item.label}
+            onSelect={(item) => setSelectedItem(item)}
+          />
+          {selectedItem && (
+            <div
+              style={{
+                marginTop: 20,
+                padding: "10px 15px",
+                background: "#f3f0ff",
+                border: "1px solid #d0bfff",
+                borderRadius: 8,
+                color: "#4b00b5",
+                fontWeight: 500,
+              }}
+            >
+              Selected Item: {selectedItem?.label}
+            </div>
+          )}
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
